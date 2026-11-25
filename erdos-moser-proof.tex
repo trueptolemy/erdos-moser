@@ -8,6 +8,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{enumitem}
 \usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage{mathtools}
 \usepackage{cancel}
 \usepackage{xcolor}
@@ -37,6 +38,7 @@
 \newcommand{\Tk}{\mathcal{T}_{k}}
 \newcommand{\ie}{\textit{i.e.},\ }
 \newcommand{\eg}{\textit{e.g.},\ }
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
 
 \title{\bfseries
   The Erd\H{o}s--Moser Equation:\space
@@ -248,7 +250,9 @@ See \S\ref{sec:lean-formalization} and Table~\ref{tab:lean-status}
 \textbf{Current Status Summary}
 
 \medskip
-\begin{tabular}{lcccl}
+{\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\linewidth}{@{}L l L c l@{}}
 \toprule
 \textbf{Case} & \textbf{Result} & \textbf{Method} & \textbf{Section} & \textbf{Lean} \\
 \midrule
@@ -260,7 +264,8 @@ Even $k \ge 2$, $m \ge \frac{3}{2}(k+1)$, $k > 1000$ & No solution\textsuperscri
 Even $k \ge 2$, $k+3 \le m < \frac{3}{2}(k+1)$, all $k$ & \textbf{No solution} & Alt.~Series (Poly.~Barrier) & \S\ref{sec:alternating-series} & \checkmark\textsuperscript{\S} \\
 Same region, alternative & Conditional & VSC cascade (Incomplete) & \S\ref{sec:vsc-cascade} & partial \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
+}
 \vspace{4pt}
 {\footnotesize \textsuperscript{*}Paper proof complete (Euler zeta bound); not yet formalized in Lean.}
 {\footnotesize \textsuperscript{\S}Core theorem fully proved; one formalization bridge (Poly.~Barrier $\to$ EM) pending.}
@@ -1933,10 +1938,12 @@ equivalent to
 \end{equation}
 where
 \begin{equation}\label{eq:B5-def}
-  B_5(\Delta) = \frac{k(k-1)(k-2)(k+1)}{15\,D^2}
-    - \frac{2\,k(k-1)(k-2)(k-3)(k-4)(k+1)}{315\,D^4}
-    + \frac{k(k-1)(k-2)(k-3)(k-4)(k-5)(k-6)(k+1)}{1575\,D^6}
-    - \frac{2\,k(k-1)\cdots(k-8)(k+1)}{31185\,D^8},
+  \begin{aligned}
+    B_5(\Delta) &= \frac{k(k-1)(k-2)(k+1)}{15\,D^2}
+      - \frac{2\,k(k-1)(k-2)(k-3)(k-4)(k+1)}{315\,D^4} \\
+    &\quad + \frac{k(k-1)(k-2)(k-3)(k-4)(k-5)(k-6)(k+1)}{1575\,D^6} \\
+    &\quad - \frac{2\,k(k-1)\cdots(k-8)(k+1)}{31185\,D^8},
+  \end{aligned}
 \end{equation}
 with $D = 3(k+1)-\Delta$.
 
@@ -2349,9 +2356,10 @@ in $t$ of degree $n$.
   \binom{t}{6} &= \frac{t^6 - 15t^5 + 85t^4 - 225t^3 + 274t^2 - 120t}{720}, \\
   \binom{t}{8} &= \frac{t^8 - 28t^7 + 322t^6 - 1960t^5 + 6769t^4
                    - 13132t^3 + 13068t^2 - 5040t}{40320}, \\
-  \binom{t}{10} &= \frac{t^{10} - 45t^9 + 870t^8 - 9450t^7 + 63273t^6
-                   - 269325t^5 + 723680t^4 - 1172700t^3
-                   + 1026576t^2 - 362880t}{3628800}.
+  \binom{t}{10} &= \frac{\begin{gathered}
+                   t^{10} - 45t^9 + 870t^8 - 9450t^7 + 63273t^6 \\
+                   {}- 269325t^5 + 723680t^4 - 1172700t^3 + 1026576t^2 - 362880t
+                 \end{gathered}}{3628800}.
 \end{align*}
 
 \textbf{Contribution of each term $j$:}
@@ -2366,9 +2374,10 @@ in $t$ of degree $n$.
       &= -\frac{t^8 - 28t^7 + 322t^6 - 1960t^5 + 6769t^4
                - 13132t^3 + 13068t^2 - 5040t}{604800}, \\
   j=5&:\quad 2 \cdot \tfrac{5}{66} \cdot \binom{t}{10} \\
-      &= \frac{5(t^{10} - 45t^9 + 870t^8 - 9450t^7 + 63273t^6
-               - 269325t^5 + 723680t^4 - 1172700t^3
-               + 1026576t^2 - 362880t)}{33 \cdot 3628800}.
+      &= \frac{5\left(\begin{gathered}
+               t^{10} - 45t^9 + 870t^8 - 9450t^7 + 63273t^6 \\
+               {}- 269325t^5 + 723680t^4 - 1172700t^3 + 1026576t^2 - 362880t
+             \end{gathered}\right)}{33 \cdot 3628800}.
 \end{align*}
 
 Summing all five terms and adding $-3t + 2$, we obtain $P(t)$ as a
@@ -3725,7 +3734,7 @@ the paper's structure:
 \centering
 \caption{Lean formalization status.  All code in \texttt{erdos-moser-full.lean}.}
 \label{tab:lean-status}
-\begin{tabular}{lccc}
+\begin{tabularx}{\linewidth}{@{}L c c L@{}}
 \toprule
 \textbf{Component} & \textbf{Part} & \textbf{Sorries} & \textbf{Verification} \\
 \midrule
@@ -3745,7 +3754,7 @@ Even $k$, same range (VSC), general & IV & \textbf{not formalized} & Requires VS
 \midrule
 Even $k$, same range (Polynomial Barrier) & V & 0 & Rational Root Theorem + \texttt{native\_decide} \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Formalization Status (2 Remaining Sorries)}
@@ -3833,22 +3842,22 @@ For even $k \ge 2$, the equation has \textbf{no solutions} in
 \caption{Complete classification of the Erd\H{o}s--Moser equation.}
 \label{tab:full-classification}
 {\small
-\begin{tabular}{lcccl}
+\begin{tabularx}{\linewidth}{@{}L L L l@{}}
 \toprule
 \textbf{Case} & \textbf{Result} & \textbf{Method} & \textbf{Status} \\
 \midrule
-\multirow{2}{*}{Odd $k \ge 3$}
+\multirow{2}{=}{Odd $k \ge 3$}
   & $2$-adic valuation & $2a-2 = ak \Rightarrow a < 0$ & \textbf{Complete} \\
   & Simultaneous induction & Parity cancellation $1+1 \equiv 0 \pmod{2}$ & \textbf{Complete} \\
 \midrule
-\multirow{2}{*}{Even $k \ge 2$, $m=k+1$}
+Even $k \ge 2$, $m=k+1$
   & Integral bound & $S_k(k) < \int_1^{k+1} x^k\,dx = (k+1)^k$ & \textbf{Complete} \\
 \midrule
-\multirow{2}{*}{Even $k \ge 2$, $m=k+2$}
+\multirow{2}{=}{Even $k \ge 2$, $m=k+2$}
   & Exponential tail bound & $(1-x)^k \le e^{-kx}$, geometric series & \textbf{Complete} \\
   & Faulhaber--binomial & Upper bound + binomial lower bound & \textbf{Complete} \\
 \midrule
-\multirow{2}{*}{Even $k \ge 2$, $m \ge \frac{3}{2}(k+1)$}
+Even $k \ge 2$, $m \ge \frac{3}{2}(k+1)$
   & \textbf{Method I:} SABF convexity & $P_k(x) > 0$ for all $x \le 2/3$ & \textbf{Complete\tnote{1}} \\
 \midrule
 Even $k \ge 2$, $k+3 \le m < \frac{3}{2}(k+1)$
@@ -3856,7 +3865,7 @@ Even $k \ge 2$, $k+3 \le m < \frac{3}{2}(k+1)$
 Even $k \ge 2$, $k+3 \le m < \frac{3}{2}(k+1)$
   & \textbf{Methods II/III:} Alt.\ series + VSC & Computational cross-validation for $k \le 100\,000$ & \textbf{Verified\tnote{2}} \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 }
 \smallskip
 {\footnotesize
